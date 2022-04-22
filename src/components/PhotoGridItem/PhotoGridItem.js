@@ -2,10 +2,24 @@ import React from 'react';
 import styled from 'styled-components/macro';
 
 const PhotoGridItem = ({ id, src, alt, tags }) => {
+
+
   return (
     <article>
       <Anchor href={`/photos/${id}`}>
-        <Image src={src} />
+        <picture>
+            <source type={"image/avif"} srcSet={`
+            ${src.replace('.jpg', '@3x.avif')} 3x,
+            ${src.replace('.jpg', '@2x.avif')} 2x,
+            ${src.replace('.jpg', '.avif')} 1x`}/>
+
+            <source type={"image/jpg"} srcSet={`
+            ${src.replace('.jpg', '@3x.jpg')} 3x,
+            ${src.replace('.jpg', '@2x.jpg')} 2x,
+            ${src} 1x`}/>
+
+            <Image alt={alt} src={src} />
+        </picture>
       </Anchor>
       <Tags>
         {tags.map((tag) => (
@@ -28,20 +42,29 @@ const Image = styled.img`
   height: 300px;
   border-radius: 2px;
   margin-bottom: 8px;
+  object-fit: cover;
 `;
 
 const Tags = styled.ul`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   gap: 8px;
+  
 `;
 
 const Tag = styled.li`
+  
   padding: 4px 8px;
   background: var(--color-gray-300);
   font-size: 0.875rem;
   font-weight: 475;
   color: var(--color-gray-800);
+  white-space: nowrap;
+  
+  &:last-of-type {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `;
 
 export default PhotoGridItem;
